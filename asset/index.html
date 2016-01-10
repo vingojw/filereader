@@ -122,6 +122,7 @@
                          var file = els.choose.files[0];
                          var fr = new FileReader();
                          fr.onload = function(file){
+                              debugger;
                               _this.imgdata =  els.img.src = this.result;
                                 
                               var hi = _this.imgdata.indexOf(',');
@@ -130,7 +131,8 @@
                               _this.atob = base64decode(_this.imgdata) ;
                               _this.render(_this.atob);
                          }
-                         fr.readAsDataURL(file);
+                         //fr.readAsDataURL(file);
+                         fr.readAsArrayBuffer(file)  //得到一个数组 file.currentTarget.result 拿到的是 ArrayBuffer  但是 要显示 ArrayBuffer 还需要 一个辅助类 ArrayBufferView   https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView
                          //fr.readAsBinaryString(file);  onload 里面 file.currentTarget.result 拿到字符
 
                     },

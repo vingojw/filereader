@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<style>
+			*{
+				box-sizing: border-box;
+				font-family: Consolas;
+			}
+			img{
+				border:1px solid #000;
+				position: absolute
+			}
+			.wrap{
+				border:1px solid #D1D1D1;
+				width: 720px;
+				margin: 20px auto;
+			}
+			.wrap .offset,
+			.wrap .bit,
+			.wrap .res{
+				display:inline-block;
+			}
+			.title, .offset{
+				color:blue;
+			}
+
+			.wrap .offset{
+				width:100px;
+				text-align: center;
+			}
+
+			.wrap .bit{
+				padding-right: 5px;
+				width:460px;
+				border-left:1px solid #D1D1D1;
+				border-right:1px solid #D1D1D1;
+			}
+			.wrap .bit span{
+				display:inline-block;
+				text-align:right;
+				margin-left: 5px;
+				width:22px;
+			}
+			.wrap .bit span:nth-child(9){
+				margin-left:14px;
+			}
+			.wrap .res{
+				width:155px;
+				padding-left: 8px;
+			}
+			.list .offset{
+				text-align: right;
+				padding-right: 10px;
+				width: 100px;
+			}
+			.bit{
+				line-height: 22px;
+			}
+			.title{
+				border-bottom: 1px solid #D1D1D1;
+			}
+			body{
+				text-align: center;
+			}
+			#result{
+				min-height: 500px;
+				text-align: left;
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<input type="file" onchange="imgChange(this.files)" />
+		<br/>
+		<br/>
+		<div class="wrap">
+			<div class="title">
+				<div class="offset">offset</div><div class="bit"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span></div><div class="res"></div>
+			</div>
+			<div id="result"></div>
+		</div>
+		<script src="//js.xqin.net/jquery-1.7.1.min.js" type="text/javascript"></script>
+		<script>
+			imgChange = function(files){
+				if(files.length < 1){
+					return;
+				}
+
+				var fr = new FileReader();
+				fr.onload = function(e){
+					if(this.readyState !== 2){
+						return;
+					}
+
+					render(new Uint8Array(this.result));
+
+				}
+				//fr.readAsDataURL(file);
+				fr.readAsArrayBuffer(files[0]);
+			};
+
+			function render(buffer){
+				var len = buffer.byteLength;
+
+				var max = Math.ceil(len / 16),
+					i = 0;
+
+				var target = $('#result');
+
+				//empty target
+				target.html('');
+
+
+				setTimeout(function draw(){
+					if(i > max){
+						return;
+					}
+
+					var offset = i * 16,
+						buf = buffer.slice(offset, offset + 16);
+
+					if(buf.length < 1){
+						return;
+					}
+
+					var html = ['<div class="list">'], t;
+
+					html.push('<div class="offset">' + offset + '</div>');
+
+					//build hex
+					html.push('<div class="bit">');
+
+					for(var k=0, j=buf.length; k<j; k++){
+						t = '00' + buf[k].toString(16);
+
+						t = t.substr(t.length - 2).toUpperCase();
+						html.push('<span>'+t+'</span>');
+					}
+
+					html.push('</div>');
+
+					//array to string
+					t = String.fromCharCode.apply(String, buf);
+
+					//要保留的字符写在正则里
+					t = t.replace(/[^ A-Za-z0-9!@#$%^&*\(\)\-_=+\[\]\{\}\|\\;:'"<>?,./`~]/g, '.');
+
+					//HTML字符转义
+					t = t.replace(/</g, '&lt;');
+
+					html.push('<div class="res">' + t + '</div>');
+
+					html.push('</div>');
+
+					target.append(html.join(''));
+
+					setTimeout(draw, i++ < 80 ? 0 : 50);//前80行,不加延时
+				}, 0);
+			}
+		</script>
+	</body>
+</html>
