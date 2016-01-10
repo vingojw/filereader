@@ -9,11 +9,16 @@
 				box-sizing: border-box;
 				font-family: Consolas;
 			}
+			.file{
+				margin: 0 auto;
+    			display: block;
+			}
 			img{
 				border:1px solid #000;
 				position: absolute
 			}
 			.wrap{
+				margin:0 auto;
 				border:1px solid #D1D1D1;
 				width: 720px;
 				margin: 20px auto;
@@ -62,9 +67,7 @@
 			.title{
 				border-bottom: 1px solid #D1D1D1;
 			}
-			body{
-				text-align: center;
-			}
+			
 			#result{
 				min-height: 500px;
 				text-align: left;
@@ -74,16 +77,11 @@
 		</style>
 	</head>
 	<body>
-		<input type="file" onchange="imgChange(this.files)" />
+		<input class="file" type="file" onchange="imgChange(this.files)" />
 		<br/>
 		<br/>
-		<div class="wrap">
-			<div class="title">
-				<div class="offset">offset</div><div class="bit"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span></div><div class="res"></div>
-			</div>
-			<div id="result"></div>
-		</div>
-		<script src="//js.xqin.net/jquery-1.7.1.min.js" type="text/javascript"></script>
+		<div class="wrap"><div class="title"><div class="offset">offset</div><div class="bit"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span></div><div class="res"></div></div><div id="result"></div></div>
+		<script src="http://js.xqin.net/jquery-1.7.1.min.js" type="text/javascript"></script>
 		<script>
 			imgChange = function(files){
 				if(files.length < 1){
