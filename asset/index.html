@@ -86,7 +86,7 @@
                 </div><div class="bit">
                      <span v-for="iitem in item" track-by="$index" v-text="iitem"></span>
                 </div><div class="res">
-                     <span v-text="item|ascii"></span>
+                     <span v-html="item|ascii"></span>
                 </div>
           </div>
      </div>
@@ -103,7 +103,8 @@
                filters:{
                     ascii:function(buf){
                          var t;
-                         t = String.fromCharCode.apply(String, buf);
+
+                         t = String.fromCharCode.apply(String, buf.map(function(a){return parseInt(a,16)}));
                          //要保留的字符写在正则里
                          t = t.replace(/[^ A-Za-z0-9!@#$%^&*\(\)\-_=+\[\]\{\}\|\\;:'"<>?,./`~]/g, '.');
                          //HTML字符转义
@@ -138,9 +139,11 @@
                         if(!_this.buf.length){
                           return;
                         };
-                        _this.items.push(_this.buf.map(function(a){
-                          return ('0'+a.toString(16)).slice(-2);
-                        }));
+                        var _s = [];
+                        _this.buf.forEach(function(a){
+                          _s.push(('0'+a.toString(16)).slice(-2).toUpperCase());
+                        });
+                        _this.items.push(_s);
                         setTimeout(set,10);
                       })();
                     }
