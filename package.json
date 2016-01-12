@@ -1,0 +1,29 @@
+{
+  "name": "filereader",
+  "version": "1.0.0",
+  "description": "fileReader\r 想获取图片数据，发现有这么一个库\r https://www.npmjs.com/package/pixel-gif\r PixelUtil 是核心\r https://github.com/59naga/pixel-util/tree/master/src\r [winhex.html](https://xqin.net/filereader/asset/new.html) --[@小秦](https://segmentfault.com/u/xqin)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --progress --profile --colors --inline"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vingojw/filereader.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vingojw/filereader/issues"
+  },
+  "homepage": "https://github.com/vingojw/filereader#readme",
+  "devDependencies": {
+    "fs": "0.0.2",
+    "pixel": "0.0.4",
+    "pixel-gif": "0.0.1",
+    "pixel-util": "0.0.2",
+    "vue": "^1.0.14",
+    "webpack": "^1.12.11",
+    "webpack-dev-server": "^1.14.1"
+  }
+}

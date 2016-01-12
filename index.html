@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="./js/vue.js"></script>
     <style>
         *{
           box-sizing: border-box;
@@ -66,12 +65,20 @@
              text-align: right;
              padding-right: 10px;
         }
+        canvas{
+            border:1px solid #000;
+            margin: 0 auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="top">
      <input type="file" v-el:choose @change="imgChange">
      <img v-el:img width="80" :src="imgdata" alt="">
+    </div>
+    <div v-el:canvas class="canvas">
+
     </div>
      <div class="wrap">
           <div class="title">
@@ -90,65 +97,7 @@
                 </div>
           </div>
      </div>
-
-     <script>
-          new Vue({
-               el:'body',
-               data:{
-                    items:[],
-                    offset:0,
-                    imgdata:'',
-                    buf:[]
-               },
-               filters:{
-                    ascii:function(buf){
-                         var t;
-
-                         t = String.fromCharCode.apply(String, buf.map(function(a){return parseInt(a,16)}));
-                         //要保留的字符写在正则里
-                         t = t.replace(/[^ A-Za-z0-9!@#$%^&*\(\)\-_=+\[\]\{\}\|\\;:'"<>?,./`~]/g, '.');
-                         //HTML字符转义
-                         t = t.replace(/</g, '&lt;');
-                         return t;
-                    }
-               },
-               methods:{
-                    imgChange:function(){
-                        var _this = this;
-                        var els = this.$els;
-                        var file = els.choose.files[0];
-                        var fr = new FileReader();
-                        _this.items = [];
-                        fr.onload = function(file){
-                             _this.render(new Uint8Array(this.result));
-                        }
-                        fr.readAsArrayBuffer(file)  //得到一个数组 file.currentTarget.result 拿到的是 ArrayBuffer  但是 要显示 ArrayBuffer 还需要 一个辅助类 ArrayBufferView   https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView
-
-                        //用来显示图片
-                        var frimg = new FileReader();
-                        frimg.onload = function(file){
-                          _this.imgdata = this.result;
-                        }
-                        frimg.readAsDataURL(file);
-
-                    },
-                    render:function(d){
-                      var _this = this;
-                      (function set(){
-                        _this.buf = d.slice(_this.offset,_this.offset += 16);
-                        if(!_this.buf.length){
-                          return;
-                        };
-                        var _s = [];
-                        _this.buf.forEach(function(a){
-                          _s.push(('0'+a.toString(16)).slice(-2).toUpperCase());
-                        });
-                        _this.items.push(_s);
-                        setTimeout(set,10);
-                      })();
-                    }
-               }
-          });
-     </script>
+    <script type="text/javascript" src="./pixel.js" charset="utf-8"></script>
+    <script type="text/javascript" src="build/bundle.js" charset="utf-8"></script>
 </body>
 </html>
