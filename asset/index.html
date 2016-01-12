@@ -1,92 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
-     <title>Document</title>
-     <script src="./js/vue.js"></script>
-     <style>
-          *{
-               box-sizing: border-box;
-          }
-          img{
-               border:1px solid #000;
-               position: absolute
-          }
-          .wrap{
-               border:1px solid #D1D1D1;
-               width:707px;
-          }
-          .wrap .offset,
-          .wrap .bit,
-          .wrap .res{
-               display:inline-block;
-          }
-          .title,
-          .offset{
-               color:blue;
-          }
-          .wrap .list .offset,
-          .wrap .list .bit span,
-          {
-               color:#000;
-          }
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="./js/vue.js"></script>
+    <style>
+        *{
+          box-sizing: border-box;
+        }
+        body{
+          font-family: Consolas;
+        }
+        img{
+          border:1px solid #000;
+          position: absolute
+        }
+        .top{
+            margin-top: 50px;
+            text-align: center;
+        }
+        .wrap{
+          margin:100px auto;
+          border:1px solid #D1D1D1;
+          width:707px;
+        }
+        .wrap .offset,
+        .wrap .bit,
+        .wrap .res{
+             display:inline-block;
+        }
+        .title,
+        .offset{
+             color:blue;
+        }
+        .wrap .list .offset,
+        .wrap .list .bit span,
+        {
+             color:#000;
+        }
 
-          .wrap .offset{
-               width:100px;
-               text-align: center;
-          }
-          .wrap .bit{
-               padding-right: 5px;
-               width:445px;
-               border-left:1px solid #D1D1D1;
-               border-right:1px solid #D1D1D1;
-          }
-          .wrap .bit span{
-               display:inline-block;
-               text-align:right;
-               margin-left: 5px;
-               width:22px;
-          }
-          .wrap .bit span:nth-child(9){
-               margin-left:10px;
-          }
-          .wrap .res{
-               width:155px;
-               padding-left: 5px;
-          }
-          .list .offset{
-               text-align: right;
-               padding-right: 10px;
-          }
-     </style>
+        .wrap .offset{
+             width:100px;
+             text-align: center;
+        }
+        .wrap .bit{
+             padding-right: 5px;
+             width:445px;
+             border-left:1px solid #D1D1D1;
+             border-right:1px solid #D1D1D1;
+        }
+        .wrap .bit span{
+             display:inline-block;
+             text-align:right;
+             margin-left: 5px;
+             width:22px;
+        }
+        .wrap .bit span:nth-child(9){
+             margin-left:10px;
+        }
+        .wrap .res{
+             width:155px;
+             padding-left: 5px;
+        }
+        .list .offset{
+             text-align: right;
+             padding-right: 10px;
+        }
+    </style>
 </head>
 <body>
+    <div class="top">
      <input type="file" v-el:choose @change="imgChange">
-
      <img v-el:img width="80" :src="imgdata" alt="">
-
-
-     <div v-text="bitHead"></div>
-
-     <textarea v-text="imgdata" v-model="imgdata" cols="30" rows="10"></textarea>
-
-
+    </div>
      <div class="wrap">
           <div class="title">
-               <div class="offset">
-                    offset
-               </div><div class="bit">
-                    <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
-               </div><div class="res"></div>
+                <div class="offset">
+                     offset
+                </div><div class="bit">
+                     <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+                </div><div class="res"></div>
           </div>
           <div v-for="item in items" track-by="$index" class="list">
-               <div class="offset" v-text="$index*16">
-
-               </div><div class="bit">
-                    <span v-for="iitem in item" track-by="$index" v-text="iitem"></span>
-               </div><div class="res">
-                    <span v-text="item|ascii"></span>
-               </div>
+                <div class="offset" v-text="$index*16">
+                </div><div class="bit">
+                     <span v-for="iitem in item" track-by="$index" v-text="iitem"></span>
+                </div><div class="res">
+                     <span v-text="item|ascii"></span>
+                </div>
           </div>
      </div>
 
@@ -94,63 +95,54 @@
           new Vue({
                el:'body',
                data:{
-                    items:[
-                         // [12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12],
-                         // [12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12],
-                         // [12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12]
-                    ],
+                    items:[],
+                    offset:0,
                     imgdata:'',
-                    bitHead:'',//头
-                    bitdata:'',
-                    atob:'',
+                    buf:[]
                },
                filters:{
-                    ascii:function(val){
-                         var _arr,s;
-                         _arr = val.map(function(a){
-                              var s = String.fromCharCode(parseInt(a,16));
-                              return /\s/.test(s)?'.':s;
-                         });
-
-                         return _arr.join('');
+                    ascii:function(buf){
+                         var t;
+                         t = String.fromCharCode.apply(String, buf);
+                         //要保留的字符写在正则里
+                         t = t.replace(/[^ A-Za-z0-9!@#$%^&*\(\)\-_=+\[\]\{\}\|\\;:'"<>?,./`~]/g, '.');
+                         //HTML字符转义
+                         t = t.replace(/</g, '&lt;');
+                         return t;
                     }
                },
                methods:{
                     imgChange:function(){
-                         var _this = this;
-                         var els = this.$els;
-                         var file = els.choose.files[0];
-                         var fr = new FileReader();
-                         fr.onload = function(file){
+                        var _this = this;
+                        var els = this.$els;
+                        var file = els.choose.files[0];
+                        var fr = new FileReader();
+                        _this.items = [];
+                        fr.onload = function(file){
+                             _this.render(new Uint8Array(this.result));
+                        }
+                        fr.readAsArrayBuffer(file)  //得到一个数组 file.currentTarget.result 拿到的是 ArrayBuffer  但是 要显示 ArrayBuffer 还需要 一个辅助类 ArrayBufferView   https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView
 
-                              console.log(new Uint8Array(this.result));
-                              debugger;
-                              // _this.imgdata =  els.img.src = this.result;
-
-                              // var hi = _this.imgdata.indexOf(',');
-                              // _this.bitHead = '文件头：'+_this.imgdata.slice(0,hi);
-                              // _this.bitdata = _this.imgdata.slice(hi+1);
-                              // _this.atob = base64decode(_this.imgdata) ;
-                              // _this.render(_this.atob);
-                         }
-                         //fr.readAsDataURL(file);
-                         fr.readAsArrayBuffer(file)  //得到一个数组 file.currentTarget.result 拿到的是 ArrayBuffer  但是 要显示 ArrayBuffer 还需要 一个辅助类 ArrayBufferView   https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView
-                         //fr.readAsBinaryString(file);  onload 里面 file.currentTarget.result 拿到字符
+                        //用来显示图片
+                        var frimg = new FileReader();
+                        frimg.onload = function(file){
+                          _this.imgdata = this.result;
+                        }
+                        frimg.readAsDataURL(file);
 
                     },
                     render:function(d){
-                         var _this = this;
-                         var _item = [];
-                         for (var i = 0,len = d.length; i < len; i++) {
-                              _item.push((d[i]).charCodeAt().toString(16));
-                              if(_item.length==16){
-                                   _this.items.push(_item);
-                                   _item = [];
-                              }
-                         };
-                         if(_item.length){
-                              _this.items.push(_item);
-                         }
+                      var _this = this;
+                      (function set(){
+                        _this.buf = d.slice(_this.offset,_this.offset += 16);
+                        if(!_this.buf.length){
+                          return;
+                        };
+                        _this.items.push(_this.buf.map(function(a){
+                          return ('0'+a.toString(16)).slice(-2);
+                        }));
+                        setTimeout(set,10);
+                      })();
                     }
                }
           });
