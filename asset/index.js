@@ -5,8 +5,9 @@ new Vue({
     data: {
         items: [],
         offset: 0,
-        imgdata: '',
-        buf: []
+        imgresult: '',//用来显示图片
+        imageDatas:[],//用来存放每一帧的数据
+        buf: []       //用来在显示
     },
     filters: {
         ascii: function (buf) {
@@ -37,7 +38,7 @@ new Vue({
             //用来显示图片
             var frimg = new FileReader();
             frimg.onload = function (file) {
-                _this.imgdata = this.result;
+                _this.imgresult = this.result;
             }
             frimg.readAsDataURL(file);
 
@@ -67,9 +68,10 @@ new Vue({
           for (var i = 0; i < images.length; i++) {
             var cvs = document.createElement('canvas');
             var ctx=cvs.getContext("2d");
-            var w = images[i].width;
-            var h = images[i].height;
-            var d = images[i];
+            var imgI = images[i];
+            var w = imgI.width;
+            var h = imgI.height;
+            var d = imgI;
             cvs.width = w;
             cvs.height = h;
             //ctx.drawImage(d,w,h);  
@@ -81,15 +83,23 @@ new Vue({
                 imgData.data[j+3]=d.data[j+3];
             }
             //ctx.putImageData(d,w,h);
+            //http://www.w3school.com.cn/tags/canvas_putimagedata.asp
             /*
-                putImageData  有7个参数 
-                第一个 是 imageData
-                2、3分别是 图像的坐标
-                4、5要画到画布的坐标
-                6、7则是画的宽度
+                imgData 规定要放回画布的 ImageData 对象。
+                x   ImageData 对象左上角的 x 坐标，以像素计。               -- 也就是从图像的那里开始
+                y   ImageData 对象左上角的 y 坐标，以像素计。
+                dirtyX  可选。水平值（x），以像素计，在画布上放置图像的位置。   -- 从画布的那里开始
+                dirtyY  可选。水平值（y），以像素计，在画布上放置图像的位置。
+                dirtyWidth  可选。在画布上绘制图像所使用的宽度。             -- 画多大范围
+                dirtyHeight 可选。在画布上绘制图像所使用的高度。
              */
             ctx.putImageData(d,0,0,0,0,w,h); 
-            _this.$els.canvas.appendChild(cvs);
+            var _div = document.createElement('div');
+            var _span = document.createElement('span');
+            _span.innerText = "第" + i + "帧"+imgI.delay+"ms";
+            _div.appendChild(cvs);
+            _div.appendChild(_span);
+            _this.$els.canvas.appendChild(_div);
           };
           //console.log(images.loopCount); // 0(Infinite)
           //console.log(images[0]);

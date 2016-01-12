@@ -67,9 +67,13 @@
         }
         canvas{
             border:1px solid #000;
-            margin: 0 auto;
-            display: block;
+            
+            
         }
+        .canvas div  {
+            text-align: center;
+        }
+         
     </style>
 </head>
 <body>
@@ -80,6 +84,7 @@
     <div v-el:canvas class="canvas">
 
     </div>
+    <canvas v-el:stage class="stage"></canvas>
      <div class="wrap">
           <div class="title">
                 <div class="offset">
