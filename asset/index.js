@@ -60,7 +60,7 @@ new Vue({
     },
     ready:function(){
         var _this = this;
-        var gif= 'http://ww4.sinaimg.cn/large/6685f05dgw1ezwup0jcvqg201c01cmx5.gif';
+        var gif= 'http://localhost:8080/asset/222.gif';
         pixel.parse(gif).then(function(images){
 
           console.log(images);
