@@ -4,6 +4,8 @@ new Vue({
     el: 'body',
     data: {
         items: [],
+        w:0,//一般gif大小是一样的
+        h:0,
         offset: 0,
         imgresult: '',//用来显示图片
         imageDatas:[],//用来存放每一帧的数据
@@ -57,6 +59,31 @@ new Vue({
                 _this.items.push(_s);
                 setTimeout(set, 10);
             })();
+        },
+        play:function(){
+            var _this = this;
+            var stageD = this.$els.stage;
+            var ct=stageD.getContext("2d");
+            var i = 0,len = _this.imageDatas.length;
+
+            stageD.width = _this.w;
+            stageD.height = _this.h;
+            (function draw(){
+                if(i++ == len-1){
+                    i = 0;
+                };
+                setTimeout(function(){
+                    ct.putImageData.apply(ct,_this.imageDatas[i].args);
+                    //清空
+                    //ctx.clearRect(0,0,1000,1000);
+                    draw();
+                },_this.imageDatas[i].delay);
+            })();
+            
+             
+            
+             
+            
         }
     },
     ready:function(){
@@ -65,6 +92,9 @@ new Vue({
         pixel.parse(gif).then(function(images){
 
           console.log(images); 
+          // gif图片每一帧大小一样
+          _this.w = images[0].width;
+          _this.h = images[0].height;
           for (var i = 0; i < images.length; i++) {
             var cvs = document.createElement('canvas');
             var ctx=cvs.getContext("2d");
@@ -74,15 +104,15 @@ new Vue({
             var d = imgI;
             cvs.width = w;
             cvs.height = h;
-            //ctx.drawImage(d,w,h);  
-            var imgData = ctx.createImageData(w,h);
-            for (var j=0;j<d.data.length;j+=4){
-                imgData.data[j+0]=d.data[j+0];
-                imgData.data[j+1]=d.data[j+1];
-                imgData.data[j+2]=d.data[j+2];
-                imgData.data[j+3]=d.data[j+3];
-            }
-            //ctx.putImageData(d,w,h);
+            
+            // var imgData = ctx.createImageData(w,h);
+            // for (var j=0;j<d.data.length;j+=4){
+            //     imgData.data[j+0]=d.data[j+0];
+            //     imgData.data[j+1]=d.data[j+1];
+            //     imgData.data[j+2]=d.data[j+2];
+            //     imgData.data[j+3]=d.data[j+3];
+            // }
+             
             //http://www.w3school.com.cn/tags/canvas_putimagedata.asp
             /*
                 imgData 规定要放回画布的 ImageData 对象。
@@ -93,7 +123,8 @@ new Vue({
                 dirtyWidth  可选。在画布上绘制图像所使用的宽度。             -- 画多大范围
                 dirtyHeight 可选。在画布上绘制图像所使用的高度。
              */
-            ctx.putImageData(d,0,0,0,0,w,h); 
+            ctx.putImageData(d,0,0,0,0,w,h);
+            _this.imageDatas.push({args:[d,0,0,0,0,w,h],delay:imgI.delay});
             var _div = document.createElement('div');
             var _span = document.createElement('span');
             _span.innerText = "第" + i + "帧"+imgI.delay+"ms";
@@ -103,6 +134,7 @@ new Vue({
           };
           //console.log(images.loopCount); // 0(Infinite)
           //console.log(images[0]);
+          _this.play();
         });
     }
 });

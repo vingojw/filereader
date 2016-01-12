@@ -50,6 +50,7 @@
         }
         .wrap .bit span{
              display:inline-block;
+             width:100px;
              text-align:right;
              margin-left: 5px;
              width:22px;
@@ -67,24 +68,27 @@
         }
         canvas{
             border:1px solid #000;
-            
-            
+        }
+        .canvas div span{
+            position: absolute;
         }
         .canvas div  {
             text-align: center;
         }
          
+         
     </style>
+         
 </head>
 <body>
     <div class="top">
      <input type="file" v-el:choose @change="imgChange">
      <img v-el:img width="80" :src="imgdata" alt="">
     </div>
-    <div v-el:canvas class="canvas">
-
-    </div>
-    <canvas v-el:stage class="stage"></canvas>
+    <div v-el:canvas class="canvas"></div>
+    
+    <div class="canvas"><div><canvas v-el:stage ></canvas><span>canvas画gif</span></div></div>
+    
      <div class="wrap">
           <div class="title">
                 <div class="offset">
